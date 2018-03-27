@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ht.mapper.UserMapper">
+<!-- 配置缓存 -->
+<cache type="org.mybatis.caches.ehcache.LoggingEhcache"></cache>
+
+<resultMap type="com.ht.model.User" id="selectuser">
+	<id column="uid" property="uid"></id>
+	<result column="uname" property="uname"></result>
+	<result column="age" property="age"></result>
+	<result column="sex" property="sex"></result>
+	<result column="createtime" property="createtime"></result>
+</resultMap>
+
+<resultMap type="com.ht.model.RoleJurisdiction" id="seljur">
+	<id column="rid" property="rid"/>
+	<result column="jid" property="jid"/>
+	<result column="rname" property="rname"/>
+	<result column="jname" property="jname"/>
+	<result column="jurl" property="jurl"/>
+</resultMap>
+
+
+<!-- 增  -->
+<insert id="add" parameterType="com.ht.model.User">
+	insert into user(uname,age,sex,createtime) values(#{username},#{age},#{sex},#{createtime});
+</insert>
+
+<!-- 删 -->
+<delete id="delete">
+	delete from user where uid=#{uid}
+</delete>
+
+<!-- 改 -->
+<update id="update" parameterType="com.ht.model.User">
+	update user set uname=#{uname} , age=#{age} ,sex=#{sex} ,createtime=#{createtime} where uid=#{uid}
+</update>
+
+<!-- 查 -->
+<select id="select" resultMap="selectuser">
+	select * from user
+</select>
+
+<!-- 根据用户的角色id查询该用户的所有权限 -->
+<select id="seluserrolejurisdiction" resultMap="seljur">
+	select r.rid,j.jid,r.rname,j.jname,j.jurl from role r,jurisdiction j,rolejurisdiction rj where r.rid=rj.rid and j.jid=rj.jid and r.rid=#{rid}
+</select>
+
+
+</mapper>
